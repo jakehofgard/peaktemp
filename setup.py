@@ -10,6 +10,7 @@ setup(
     package_dir={'': 'peaktemp'},
     url='https://github.com/jakehofgard/peaktemp',
     keywords='climate, temperature, forecasting, peak load',
+    python_requires='>=3.8',
     install_requires=[
         'matplotlib',
         'pandas',

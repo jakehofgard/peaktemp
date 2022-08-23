@@ -1,7 +1,6 @@
 # Plotting and data processing
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Tools for working with CDS API
 from geopy.geocoders import Nominatim
@@ -13,14 +12,14 @@ import xarray as xr
 import re
 
 # Packages for working with NCEI ISD data
-from datetime import date, datetime
+from datetime import date
 from noaastn import noaastn
 
 # Suppress unnecessary pandas output
 pd.options.mode.chained_assignment = None
 
 
-def retrieve_cmip6_model(model, scenario, location, path, margin=2, start_year=1990, end_year=2050):
+def download_cmip6_model(model, scenario, location, path, margin=2, start_year=1990, end_year=2050):
     """
     Downloads CMIP6 data for a given climate model, scenario, and location from the Copernicus Climate Data Store.
     Parameters
@@ -45,7 +44,7 @@ def retrieve_cmip6_model(model, scenario, location, path, margin=2, start_year=1
     Nothing. Downloaded files will be located in the specified directory.
     Examples
     --------
-    retrieve_cmip6_model(
+    download_cmip6_model(
         model="miroc6",
         scenario="ssp5_8_5",
         location="Phoenix Sky Harbor",
@@ -121,7 +120,7 @@ def _convert_index_to_datetime(timestamp):
     return pd.to_datetime(str(timestamp)[:10])
 
 
-def _extract_cmip6_data(folder, model, official_name, scenario, location):
+def extract_cmip6_data(folder, model, official_name, scenario, location):
     """
     Extracts and processes downloaded CMIP6 model data.
     Parameters
@@ -229,7 +228,7 @@ def aggregate_cmip6_data(path, climate_models, scenario, location):
     data_dict = {}
     for model in climate_models:
         try:
-            data_dict[model] = _extract_cmip6_data(path, model, climate_models[model], scenario, location)
+            data_dict[model] = extract_cmip6_data(path, model, climate_models[model], scenario, location)
         except:
             print("Climate scenario " + scenario + " not available for model " + model)
 
@@ -393,7 +392,7 @@ def get_daily_extrema(data):
     Returns
     -------
     pd.DataFrame
-        A DataFrame containing daily minima, maxima, and differences for plotting/validation purposes.
+        A DataFrame containing daily minima, maxima, and differences.
     """
     extrema_dict = {}
     for year in data:
@@ -406,4 +405,8 @@ def get_daily_extrema(data):
             .set_index('date')
         extrema_dict[year]["diff"] = extrema_dict[year]["daily_max"] - extrema_dict[year]["daily_min"]
 
-    return pd.concat(extrema_dict)
+    # Filter out invalid data for the current year
+    current_year = date.today().year
+    extrema_dict[current_year] = extrema_dict[current_year][extrema_dict[current_year]["diff"] != 0]
+
+    return extrema_dict
