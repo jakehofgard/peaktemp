@@ -41,7 +41,8 @@ def download_cmip6_model(model, scenario, location, path, margin=2, start_year=1
         The end year of the data download. Cannot be later than 2100, and is set to 2050 by default.
     Returns
     -------
-    Nothing. Downloaded files will be located in the specified directory.
+    None
+        Downloaded files will be located in the specified directory.
     Examples
     --------
     download_cmip6_model(
@@ -307,7 +308,8 @@ def _fill_missing_values(input_df, year):
         The year to be interpolated (required due to the leap year case, which must be handled separately)
     Returns
     -------
-    Nothing. The original hourly profile dictionary is updated.
+    None
+        The original hourly profile dictionary is updated.
     """
     data = input_df[year]
     start = data["date"][0]
