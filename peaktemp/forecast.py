@@ -14,7 +14,7 @@ from sklearn.metrics import mean_absolute_percentage_error as mape
 pd.options.mode.chained_assignment = None
 
 
-def _extract_dt_info(df):
+def extract_dt_info(df):
     """
     Reformats DataFrames with necessary DateTime information
     Parameters
@@ -84,9 +84,9 @@ def _fit_single_profile(isd_data, daily_extremes, model_data, fit_year, profile_
     # Find specific year that needs an hourly profile
     model = model[model["year"] == fit_year]
 
-    profile = _extract_dt_info(profile)
-    extremes = _extract_dt_info(extremes)
-    model = _extract_dt_info(model)
+    profile = extract_dt_info(profile)
+    extremes = extract_dt_info(extremes)
+    model = extract_dt_info(model)
 
     # Interpolation handles leap year cases
     merged = extremes.merge(model, on=["month", "day"], suffixes=("_actual", "_projected"), how="right").interpolate()
@@ -288,7 +288,7 @@ def combine_models(isd_data, fitted_models, return_winter=False):
         .pivot(index="date", columns="hour", values="hourly_temp") \
         .rename(columns=columns)
 
-    historical_df = _extract_dt_info(historical_df)
+    historical_df = extract_dt_info(historical_df)
     historical_df["year"] = pd.to_datetime(historical_df.index).year
 
     # Combine all dataframes for final forecast
@@ -504,7 +504,7 @@ def plot_full_forecast(isd_data, fitted_models, season="summer", title='Historic
         .pivot(index="date", columns="hour", values="hourly_temp") \
         .rename(columns=columns)
 
-    historical_df = _extract_dt_info(historical_df)
+    historical_df = extract_dt_info(historical_df)
     historical_df["year"] = pd.to_datetime(historical_df.index).year
 
     if season == "winter":
