@@ -175,6 +175,13 @@ def fit_entire_profile(isd_data, daily_extremes, model_data):
     -------
     pd.DataFrame
         A DataFrame containing the entire set of hourly temperature profiles for the given model
+    Examples
+    --------
+    fit_entire_profile(
+        isd_data=isd_data,
+        daily_extremes=daily_extremes,
+        model_data=model_data
+    )
     """
     profiles = []
     model = model_data
@@ -189,7 +196,7 @@ def fit_entire_profile(isd_data, daily_extremes, model_data):
     return full_profile
 
 
-def create_full_dataset(isd_data, daily_extremes, climate_models):
+def fit_multiple_profiles(isd_data, daily_extremes, climate_models):
     """
     Given a set models, fit hourly profiles to each model
     Parameters
@@ -199,18 +206,25 @@ def create_full_dataset(isd_data, daily_extremes, climate_models):
     daily_extremes: dict
         A dictionary containing daily extrema; the output of data.get_daily_extrema
     climate_models: dict
-        A dictionary containing CMIP6 model data; the output of data.aggregate_model_data
+        A dictionary containing CMIP6 model data; the output of data.aggregate_cmip6_data
     Returns
     -------
     dict
         A dictionary containing full hourly profiles for each model in climate_models
+    Examples
+    --------
+    fit_entire_profile(
+        isd_data=isd_data,
+        daily_extremes=daily_extremes,
+        climate_models=climate_models
+    )
     """
     full_dataset = {}
     for model in climate_models:
         print(f'\033[1m Fitting {model} \033[0m')
         try:
             full_dataset[model] = fit_entire_profile(isd_data, daily_extremes, climate_models[model])
-        except:
+        except KeyError:
             print("Climate scenario not available for model " + model)
     return full_dataset
 
@@ -230,6 +244,11 @@ def get_seasonal_peaks(df, winter_peak_hrs=(7, 8, 9, 10, 17, 18), summer_peak_hr
     -------
     pd.DataFrame
         A DataFrame containing seasonal peak temperatures for each year
+    Examples
+    --------
+    fit_entire_profile(
+        df=fitted_profiles['cnrm_esm2_1']
+    )
     """
     winter_months = [1, 2, 11, 12]
     summer_months = [6, 7, 8, 9]
@@ -280,6 +299,12 @@ def combine_models(isd_data, fitted_models, return_winter=False):
     -------
     pd.DataFrame
         A DataFrame containing seasonal peak temperatures for all models
+    Examples
+    --------
+    fit_entire_profile(
+        isd_data=isd_data,
+        fitted_models=fitted_models
+    )
     """
     # Rename columns for easier processing
     columns = {hr: "HR" + str(hr + 1) for hr in range(24)}
@@ -359,6 +384,12 @@ def calculate_peaks(df, level, length=30, start_year=2005, return_winter=False):
     -------
     pd.DataFrame
         A DataFrame containing the peak temperature forecast
+    Examples
+    --------
+    fit_entire_profile(
+        df=combined_models,
+        level=2
+    )
     """
     summer_stack = df[[col for col in df if col.startswith('summer')]] \
         .stack() \
@@ -393,8 +424,6 @@ def calculate_peaks(df, level, length=30, start_year=2005, return_winter=False):
     return final_df[["summer_peak"]]
 
 
-# TODO: Finish plotting functions and XGBoost predictions
-
 def forecast_xgboost(isd_data, fitted_models, season="summer", show_importance=False, path="xgb_importance_plot.png"):
     """
     Produces a forecast for peak temperatures using XGBoost, with standard hyperparameters
@@ -414,6 +443,12 @@ def forecast_xgboost(isd_data, fitted_models, season="summer", show_importance=F
     -------
     pd.DataFrame
         A DataFrame containing an XGBoost forecast for peak temperatures in future years
+    Examples
+    --------
+    fit_entire_profile(
+        isd_data=isd_data,
+        fitted_models=fitted_models
+    )
     """
     # Simple check for valid arguments
     seasons = ['summer', 'winter']
@@ -490,6 +525,12 @@ def plot_full_forecast(isd_data, fitted_models, season="summer", title='Historic
     -------
     None
         A plot will be displayed and saved to the specified path.
+    Examples
+    --------
+    plot_full_forecast(
+        isd_data=isd_data,
+        fitted_models=fitted_models
+    )
     """
     # Simple check for valid arguments
     seasons = ['summer', 'winter']

@@ -72,36 +72,48 @@ def download_cmip6_model(model, scenario, location, path, margin=2, start_year=1
     client = cdsapi.Client()
 
     # Retrieve daily maximums from given model
-    client.retrieve(
-        'projections-cmip6',
-        {
-            'temporal_resolution': 'daily',
-            'experiment': scenario,
-            'level': 'single_levels',
-            'variable': 'daily_maximum_near_surface_air_temperature',
-            'model': model,
-            'date': dates,
-            'area': bbox,
-            'format': 'zip',
-        },
-        path + '/daily_max_' + model + '_' + scenario + '.zip'
-    )
+    try:
+        client.retrieve(
+            'projections-cmip6',
+            {
+                'temporal_resolution': 'daily',
+                'experiment': scenario,
+                'level': 'single_levels',
+                'variable': 'daily_maximum_near_surface_air_temperature',
+                'model': model,
+                'date': dates,
+                'area': bbox,
+                'format': 'zip',
+            },
+            path + '/daily_max_' + model + '_' + scenario + '.zip'
+        )
+    except Exception as error:
+        if "No matching data for request" in str(error):
+            print(f"CMIP6 data not available for scenario {scenario} and model {model}! Continuing to next download.")
+        else:
+            raise Exception("Retrieval or download error occurred; check error stack!")
 
     # Retrieve daily minimums from given model
-    client.retrieve(
-        'projections-cmip6',
-        {
-            'temporal_resolution': 'daily',
-            'experiment': scenario,
-            'level': 'single_levels',
-            'variable': 'daily_minimum_near_surface_air_temperature',
-            'model': model,
-            'date': dates,
-            'area': bbox,
-            'format': 'zip',
-        },
-        path + '/daily_min_' + model + '_' + scenario + '.zip'
-    )
+    try:
+        client.retrieve(
+            'projections-cmip6',
+            {
+                'temporal_resolution': 'daily',
+                'experiment': scenario,
+                'level': 'single_levels',
+                'variable': 'daily_minimum_near_surface_air_temperature',
+                'model': model,
+                'date': dates,
+                'area': bbox,
+                'format': 'zip',
+            },
+            path + '/daily_min_' + model + '_' + scenario + '.zip'
+        )
+    except Exception as error:
+        if "No matching data for request" in str(error):
+            print(f"CMIP6 data not available for scenario {scenario} and model {model}! Continuing to next download.")
+        else:
+            raise Exception("Retrieval or download error occurred; check error stack!")
 
 
 # The following are all utility functions for processing and cleaning CMIP6 data.
@@ -121,7 +133,7 @@ def _convert_index_to_datetime(timestamp):
     return pd.to_datetime(str(timestamp)[:10])
 
 
-def extract_cmip6_data(folder, model, official_name, scenario, location):
+def _extract_cmip6_data(folder, model, official_name, scenario, location):
     """
     Extracts and processes downloaded CMIP6 model data.
     Parameters
@@ -141,6 +153,11 @@ def extract_cmip6_data(folder, model, official_name, scenario, location):
     pd.DataFrame
         A DataFrame containing all the extracted CMIP6 model data.
     """
+
+    # If historical data wasn't downloaded, download now
+    if not os.path.exists(os.path.join(folder, "daily_max_" + model + "_historical.zip")):
+        print("Historical data not found, downloading now")
+        download_cmip6_model(model, "historical", location, folder)
 
     # Format file paths
     files = [
@@ -190,7 +207,10 @@ def extract_cmip6_data(folder, model, official_name, scenario, location):
     full_df.index = full_df.index.map(_convert_index_to_datetime)
 
     # Close .nc files
-    ds_max.close(); ds_max_hist.close(); ds_min.close(); ds_min_hist.close()
+    ds_max.close()
+    ds_max_hist.close()
+    ds_min.close()
+    ds_min_hist.close()
 
     # Delete extra files that result from unzipping
     for f in files:
@@ -207,7 +227,7 @@ def aggregate_cmip6_data(path, climate_models, scenario, location):
     ----------
     path: str
         The folder where the downloaded CMIP6 model data is stored
-    climate_models: str
+    climate_models: dict
         A dictionary containing the desired climate models and their 'official' names
     scenario: str
         The name of the desired climate scenario
@@ -229,9 +249,14 @@ def aggregate_cmip6_data(path, climate_models, scenario, location):
     data_dict = {}
     for model in climate_models:
         try:
-            data_dict[model] = extract_cmip6_data(path, model, climate_models[model], scenario, location)
-        except:
-            print("Climate scenario " + scenario + " not available for model " + model)
+            data_dict[model] = _extract_cmip6_data(path, model, climate_models[model], scenario, location)
+        except FileNotFoundError:
+            print(f"Climate scenario {scenario} does not exist or was not downloaded for model {model}!")
+
+        # try:
+        #     data_dict[model] = _extract_cmip6_data(path, model, climate_models[model], scenario, location)
+        # except:
+        #     print("Climate scenario " + scenario + " not available for model " + model)
 
     return data_dict
 
@@ -277,7 +302,7 @@ def _retrieve_station(location):
 
     # Retrieve stations and process station metadata
     stations = noaastn.get_stations_info(country="US")
-    stations["latitude"], stations["longitude"] = stations["latitude"].astype("float"), stations["longitude"].astype(
+    stations["lat"], stations["lon"] = stations["latitude"].astype("float"), stations["longitude"].astype(
         "float")
     stations["length"] = stations["end"] - stations["start"]
     stations = stations[stations["length"] > "10000 days"]
@@ -302,8 +327,8 @@ def _fill_missing_values(input_df, year):
     Fills missing data from ISD downloads, linearly interpolating missing hours.
     Parameters
     ----------
-    input_df: pd.DataFrame
-        A pandas DataFrame containing a single year of hourly profiles
+    input_df: dict
+        The raw ISD data download
     year: int
         The year to be interpolated (required due to the leap year case, which must be handled separately)
     Returns
@@ -346,6 +371,9 @@ def download_isd_profiles(location, start_year=date.today().year - 30, end_year=
     -------
     dict
         A dictionary containing pd.DataFrames for each year of downloaded, cleaned ISD data.
+    Examples
+    --------
+    download_isd_profiles(location="Phoenix Sky Harbor")
     """
     all_data = {}
     # Retrieve the closest station with at least 30 years of data
@@ -384,7 +412,7 @@ def download_isd_profiles(location, start_year=date.today().year - 30, end_year=
     return all_data
 
 
-def get_daily_extrema(data):
+def get_isd_extremes(data):
     """
     Produces a DataFrame with daily maxima, minima, and differences for the input data.
     Parameters
@@ -393,8 +421,13 @@ def get_daily_extrema(data):
         A dictionary of pd.DataFrames, likely the output of download_isd_profiles, containing hourly profiles.
     Returns
     -------
-    pd.DataFrame
-        A DataFrame containing daily minima, maxima, and differences.
+    dict
+        A dictionary containing daily minima, maxima, and differences.
+    Examples
+    --------
+    get_isd_extremes(
+        data=download_isd_profiles(location="Phoenix Sky Harbor")
+    )
     """
     extrema_dict = {}
     for year in data:
