@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>data</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/jakehofgard/PycharmProjects/peaktemp/peaktemp/data.py">/Users/jakehofgard/PycharmProjects/peaktemp/peaktemp/data.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;Plotting&nbsp;and&nbsp;data&nbsp;processing</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cdsapi.html">cdsapi</a><br>
+<a href="geopy.distance.html">geopy.distance</a><br>
+<a href="noaastn.noaastn.html">noaastn.noaastn</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+<a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="xarray.html">xarray</a><br>
+<a href="zipfile.html">zipfile</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-aggregate_cmip6_data"><strong>aggregate_cmip6_data</strong></a>(path, climate_models, scenario, location)</dt><dd><tt>Extracts&nbsp;and&nbsp;processes&nbsp;downloaded&nbsp;CMIP6&nbsp;model&nbsp;data&nbsp;for&nbsp;a&nbsp;collection&nbsp;of&nbsp;climate&nbsp;models.<br>
+Parameters<br>
+----------<br>
+path:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;folder&nbsp;where&nbsp;the&nbsp;downloaded&nbsp;CMIP6&nbsp;model&nbsp;data&nbsp;is&nbsp;stored<br>
+climate_models:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;desired&nbsp;climate&nbsp;models&nbsp;and&nbsp;their&nbsp;'official'&nbsp;names<br>
+scenario:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;desired&nbsp;climate&nbsp;scenario<br>
+location:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;a&nbsp;specific&nbsp;location&nbsp;(i.e.,&nbsp;Denver,&nbsp;Colorado)&nbsp;for&nbsp;timeseries&nbsp;extraction<br>
+Returns<br>
+-------<br>
+dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;DataFrames&nbsp;with&nbsp;the&nbsp;extracted&nbsp;data&nbsp;from&nbsp;each&nbsp;model<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Examples<br>
+--------<br>
+<a href="#-aggregate_cmip6_data">aggregate_cmip6_data</a>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;path="phoenix_miroc6_SSP5-8.5",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;climate_models={"miroc6":&nbsp;"MIROC6",&nbsp;"gfdl_esm4":&nbsp;"GFDL-ESM4",&nbsp;"canesm5:&nbsp;CanESM5"}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scenario="ssp5_8_5",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location="Phoenix,&nbsp;AZ"<br>
+)</tt></dd></dl>
+ <dl><dt><a name="-download_cmip6_model"><strong>download_cmip6_model</strong></a>(model, scenario, location, path, margin=2, start_year=1990, end_year=2050)</dt><dd><tt>Downloads&nbsp;CMIP6&nbsp;data&nbsp;for&nbsp;a&nbsp;given&nbsp;climate&nbsp;model,&nbsp;scenario,&nbsp;and&nbsp;location&nbsp;from&nbsp;the&nbsp;Copernicus&nbsp;Climate&nbsp;Data&nbsp;Store.<br>
+Parameters<br>
+----------<br>
+model&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;desired&nbsp;climate&nbsp;model<br>
+scenario:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;desired&nbsp;climate&nbsp;scenario<br>
+location:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;desired&nbsp;location&nbsp;for&nbsp;climate&nbsp;projections.<br>
+path:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;path&nbsp;name&nbsp;for&nbsp;the&nbsp;ZIP&nbsp;files&nbsp;downloaded&nbsp;from&nbsp;the&nbsp;CDS<br>
+margin:&nbsp;float,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;size&nbsp;of&nbsp;the&nbsp;bounding&nbsp;box&nbsp;surrounding&nbsp;the&nbsp;specified&nbsp;location.&nbsp;By&nbsp;default,&nbsp;this&nbsp;is&nbsp;2,&nbsp;which&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;usually&nbsp;sufficiently&nbsp;coarse&nbsp;for&nbsp;most&nbsp;CMIP6&nbsp;models<br>
+start_year:&nbsp;int,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;start&nbsp;year&nbsp;of&nbsp;the&nbsp;data&nbsp;download.&nbsp;Cannot&nbsp;be&nbsp;earlier&nbsp;than&nbsp;1950,&nbsp;and&nbsp;is&nbsp;set&nbsp;to&nbsp;1990&nbsp;by&nbsp;default.<br>
+end_year:&nbsp;int,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;end&nbsp;year&nbsp;of&nbsp;the&nbsp;data&nbsp;download.&nbsp;Cannot&nbsp;be&nbsp;later&nbsp;than&nbsp;2100,&nbsp;and&nbsp;is&nbsp;set&nbsp;to&nbsp;2050&nbsp;by&nbsp;default.<br>
+Returns<br>
+-------<br>
+None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Downloaded&nbsp;files&nbsp;will&nbsp;be&nbsp;located&nbsp;in&nbsp;the&nbsp;specified&nbsp;directory.<br>
+Examples<br>
+--------<br>
+<a href="#-download_cmip6_model">download_cmip6_model</a>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model="miroc6",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scenario="ssp5_8_5",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location="Phoenix&nbsp;Sky&nbsp;Harbor",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;path="phoenix_miroc6_SSP5-8.5"<br>
+)</tt></dd></dl>
+ <dl><dt><a name="-download_isd_profiles"><strong>download_isd_profiles</strong></a>(location, start_year=1992, end_year=2022)</dt><dd><tt>Downloads&nbsp;and&nbsp;cleans&nbsp;ISD&nbsp;data&nbsp;for&nbsp;a&nbsp;given&nbsp;location,&nbsp;over&nbsp;a&nbsp;given&nbsp;timeframe<br>
+Parameters<br>
+----------<br>
+location:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;desired&nbsp;location&nbsp;of&nbsp;the&nbsp;data&nbsp;download.&nbsp;When&nbsp;possible,&nbsp;format&nbsp;as&nbsp;"CITY,&nbsp;STATE"<br>
+start_year:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;start&nbsp;year&nbsp;of&nbsp;the&nbsp;data&nbsp;download,&nbsp;set&nbsp;to&nbsp;be&nbsp;30&nbsp;years&nbsp;earlier&nbsp;than&nbsp;the&nbsp;current&nbsp;year&nbsp;by&nbsp;default&nbsp;(in&nbsp;line&nbsp;with&nbsp;NOAA&nbsp;weather&nbsp;normals).<br>
+end_year:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;end&nbsp;year&nbsp;of&nbsp;the&nbsp;data&nbsp;download,&nbsp;set&nbsp;to&nbsp;the&nbsp;current&nbsp;year&nbsp;by&nbsp;default.<br>
+Returns<br>
+-------<br>
+dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;pd.DataFrames&nbsp;for&nbsp;each&nbsp;year&nbsp;of&nbsp;downloaded,&nbsp;cleaned&nbsp;ISD&nbsp;data.<br>
+Examples<br>
+--------<br>
+<a href="#-download_isd_profiles">download_isd_profiles</a>(location="Phoenix&nbsp;Sky&nbsp;Harbor")</tt></dd></dl>
+ <dl><dt><a name="-get_isd_extremes"><strong>get_isd_extremes</strong></a>(data)</dt><dd><tt>Produces&nbsp;a&nbsp;DataFrame&nbsp;with&nbsp;daily&nbsp;maxima,&nbsp;minima,&nbsp;and&nbsp;differences&nbsp;for&nbsp;the&nbsp;input&nbsp;data.<br>
+Parameters<br>
+----------<br>
+data:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;of&nbsp;pd.DataFrames,&nbsp;likely&nbsp;the&nbsp;output&nbsp;of&nbsp;download_isd_profiles,&nbsp;containing&nbsp;hourly&nbsp;profiles.<br>
+Returns<br>
+-------<br>
+dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;daily&nbsp;minima,&nbsp;maxima,&nbsp;and&nbsp;differences.<br>
+Examples<br>
+--------<br>
+<a href="#-get_isd_extremes">get_isd_extremes</a>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data=<a href="#-download_isd_profiles">download_isd_profiles</a>(location="Phoenix&nbsp;Sky&nbsp;Harbor")<br>
+)</tt></dd></dl>
+</td></tr></table>
+</body></html>

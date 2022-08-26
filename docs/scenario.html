@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module scenario</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>scenario</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/jakehofgard/PycharmProjects/peaktemp/peaktemp/scenario.py">/Users/jakehofgard/PycharmProjects/peaktemp/peaktemp/scenario.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="forecast.html">forecast</a><br>
+</td><td width="25%" valign=top><a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-create_scenarios"><strong>create_scenarios</strong></a>(isd_data, daily_extremes, climate_scenarios)</dt><dd><tt>Fits&nbsp;all&nbsp;profiles&nbsp;for&nbsp;ALL&nbsp;climate&nbsp;models&nbsp;in&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;climate&nbsp;scenarios<br>
+Parameters<br>
+----------<br>
+isd_data:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;historical&nbsp;hourly&nbsp;temperature&nbsp;profiles<br>
+daily_extremes:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;daily&nbsp;extrema;&nbsp;the&nbsp;output&nbsp;of&nbsp;data.get_daily_extrema<br>
+climate_scenarios:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;list&nbsp;containing&nbsp;outputs&nbsp;of&nbsp;data.aggregate_cmip6_data&nbsp;for&nbsp;each&nbsp;climate&nbsp;scenario<br>
+Returns<br>
+-------<br>
+list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;list&nbsp;with&nbsp;fitted&nbsp;scenarios&nbsp;for&nbsp;all&nbsp;climate&nbsp;scenarios&nbsp;and&nbsp;models<br>
+Examples<br>
+--------<br>
+<a href="#-create_scenarios">create_scenarios</a>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;isd_data=isd_data,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;daily_extremes=daily_extremes,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;climate_scenarios=[extracted_models_1_2_6,&nbsp;extracted_models_5_8_5]<br>
+)</tt></dd></dl>
+ <dl><dt><a name="-plot_scenarios"><strong>plot_scenarios</strong></a>(isd_data, fitted_scenarios, labels, title, path)</dt><dd><tt>Plots&nbsp;all&nbsp;climate&nbsp;scenarios,&nbsp;with&nbsp;95%&nbsp;confidence&nbsp;intervals,&nbsp;against&nbsp;historical&nbsp;peaks<br>
+Parameters<br>
+----------<br>
+isd_data:&nbsp;dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;historical&nbsp;hourly&nbsp;temperature&nbsp;profiles<br>
+fitted_scenarios:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;list&nbsp;containing&nbsp;fitted&nbsp;climate&nbsp;scenarios;&nbsp;the&nbsp;output&nbsp;of&nbsp;scenario.create_scenarios<br>
+labels:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;labels,&nbsp;in&nbsp;order,&nbsp;for&nbsp;the&nbsp;different&nbsp;climate&nbsp;scenarios<br>
+title:str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;title&nbsp;of&nbsp;the&nbsp;output&nbsp;plot<br>
+path:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;path&nbsp;of&nbsp;the&nbsp;output&nbsp;plot<br>
+Returns<br>
+-------<br>
+None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;resulting&nbsp;plot&nbsp;will&nbsp;be&nbsp;saved&nbsp;to&nbsp;the&nbsp;specified&nbsp;path<br>
+Examples<br>
+--------<br>
+scenario.<a href="#-plot_scenarios">plot_scenarios</a>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;isd_data=isd_data,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fitted_scenarios=fitted_scenarios,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;labels=["SSP1-2.6",&nbsp;"SSP5-8.5"],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;title="Example&nbsp;Scenario&nbsp;Analysis",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;path="test_scenario.png"<br>
+)</tt></dd></dl>
+</td></tr></table>
+</body></html>
