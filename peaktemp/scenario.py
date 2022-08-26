@@ -1,4 +1,4 @@
-import forecast
+from peaktemp import forecast
 import matplotlib.pyplot as plt
 import pandas as pd
 
