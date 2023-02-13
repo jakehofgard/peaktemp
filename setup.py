@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='peaktemp',
-    version='0.2.4',
+    version='0.2.5',
     license='MIT',
     author="Jake Hofgard",
     author_email='whofgard@stanford.edu',
