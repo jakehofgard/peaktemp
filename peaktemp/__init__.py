@@ -1,3 +1,3 @@
-from peaktemp.data import *
-from peaktemp.forecast import *
-from peaktemp.scenario import *
+from peaktemp import data
+from peaktemp import forecast
+from peaktemp import scenario
